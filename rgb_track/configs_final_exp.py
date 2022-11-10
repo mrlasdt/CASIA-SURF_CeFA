@@ -10,7 +10,10 @@ from at_learner_core.utils import joint_transforms as j_transforms
 from at_learner_core.utils import sequence_transforms as s_transforms
 from PIL import Image
 
-L = 16
+L = 5
+train_path = '/home/sds/hungbnt/test/CASIA-SURF_CeFA/externals/notebooks/train_zalo.csv'
+test_path = '/home/sds/hungbnt/test/CASIA-SURF_CeFA/externals/notebooks/train_zalo.csv'
+
 image_size = 112
 modality_list = ['stat_r1000', 'stat_r1']
 of_modality_list = ['optical_flow', 'optical_flow_start']
@@ -20,9 +23,9 @@ test_seq_transform = tv.transforms.Compose([
 ])
 
 train_seq_transform = tv.transforms.Compose([
-    tv.transforms.RandomApply([
-        s_transforms.DuplicateElements(1, False, ['data'], 'target', 1, True)
-    ], p=0.5),
+    # tv.transforms.RandomApply([
+    #     s_transforms.DuplicateElements(1, False, ['data'], 'target', 1, True)
+    # ], p=0.5),
     s_transforms.LinspaceTransform(L, key_list=['data'], max_start_index=0),
 ])
 
@@ -92,7 +95,7 @@ test_image_transform = tv.transforms.Compose([
     transforms.Transform4EachKey([
         preprocess_transform,
     ], key_list=['data']),
-    transforms.CreateNewItem(transforms.LiuOpticalFlowTransform(0, L-1), 'data', 'optical_flow'),
+    transforms.CreateNewItem(transforms.LiuOpticalFlowTransform(0, L - 1), 'data', 'optical_flow'),
     transforms.CreateNewItem(transforms.LiuOpticalFlowTransform(0, 1), 'data', 'optical_flow_start'),
     postprocess_transform
 ])
@@ -114,7 +117,7 @@ def get_config(protocol_name):
         'datalist_config': {
             'trainlist_config': {
                 'dataset_name': 'VideoDataset',
-                'datalist_path': '../data/train_list.txt',
+                'datalist_path': train_path,
                 'protocol_name': protocol_name,
                 'data_columns': [('rgb_path', 'data')],
                 'target_columns': ('label', 'target'),
@@ -130,7 +133,7 @@ def get_config(protocol_name):
             },
             'testlist_configs': {
                 'dataset_name': 'VideoDataset',
-                'datalist_path': '../data/dev_list.txt',
+                'datalist_path': test_path,
                 'protocol_name': protocol_name,
                 'data_columns': [('rgb_path', 'data')],
                 'target_columns': ('label', 'target'),

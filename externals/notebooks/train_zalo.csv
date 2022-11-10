@@ -1,0 +1,11 @@
+rgb_path,video_id,label
+/mnt/ssd500/hungbnt/liveness_detection/zalo/train/images/526/000.jpg,526,0
+/mnt/ssd500/hungbnt/liveness_detection/zalo/train/images/526/037.jpg,526,0
+/mnt/ssd500/hungbnt/liveness_detection/zalo/train/images/526/074.jpg,526,0
+/mnt/ssd500/hungbnt/liveness_detection/zalo/train/images/526/111.jpg,526,0
+/mnt/ssd500/hungbnt/liveness_detection/zalo/train/images/526/149.jpg,526,0
+/mnt/ssd500/hungbnt/liveness_detection/zalo/train/images/988/000.jpg,988,1
+/mnt/ssd500/hungbnt/liveness_detection/zalo/train/images/988/037.jpg,988,1
+/mnt/ssd500/hungbnt/liveness_detection/zalo/train/images/988/075.jpg,988,1
+/mnt/ssd500/hungbnt/liveness_detection/zalo/train/images/988/113.jpg,988,1
+/mnt/ssd500/hungbnt/liveness_detection/zalo/train/images/988/151.jpg,988,1
