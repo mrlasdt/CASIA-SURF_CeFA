@@ -15,6 +15,7 @@ batch_size = 32
 train_path = 'externals/train_zalo.csv'
 test_path = 'externals/test_zalo.csv'
 save_dir_in_colab = '/content/drive/MyDrive/ZALO_AI_2022'
+outpath = 'experiment'
 nthreads = 2
 image_size = 112
 modality_list = ['stat_r1000', 'stat_r1']
@@ -114,7 +115,7 @@ def get_config(protocol_name):
         },
 
         'checkpoint_config': {
-            'out_path': None,
+            'out_path': outpath,
             'save_frequency': 1,
             'save_dir_in_colab': save_dir_in_colab,
         },
