@@ -38,4 +38,4 @@ mkdir data_zalo
 
   # unzip data_zalo/public.zip -d data_zalo
 
-  python externals/prepare_lists.py --data_path /root/CASIA-SURF_CeFA/data_zalo/train/images
+  python externals/prepare_lists.py --data_path /content/CASIA-SURF_CeFA/data_zalo/train/images

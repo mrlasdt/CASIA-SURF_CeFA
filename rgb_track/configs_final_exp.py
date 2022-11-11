@@ -14,7 +14,7 @@ L = 16
 train_path = 'externals/train_zalo.csv'
 test_path = 'externals/test_zalo.csv'
 save_dir_in_colab = '/content/drive/MyDrive/ZALO_AI_2022'
-
+nthreads = 2
 image_size = 112
 modality_list = ['stat_r1000', 'stat_r1']
 of_modality_list = ['optical_flow', 'optical_flow_start']
@@ -146,7 +146,7 @@ def get_config(protocol_name):
         },
 
         'train_process_config': {
-            'nthreads': 8,
+            'nthreads': nthreads,
             'ngpu': 1,
             'batchsize': 32,
             'nepochs': 5,

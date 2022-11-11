@@ -10,7 +10,10 @@ from . import loggers
 class Runner(object):
     def __init__(self, config, train=True):
         self.config = config
-        self.device = torch.device("cuda" if config.train_process_config.ngpu else "cpu")
+        device = "cuda:0" if config.train_process_config.ngpu else "cpu"
+        if "cuda" in device:
+            assert torch.cuda.is_available(), "No GPU found"
+        self.device = torch.device(device)
 
         self._init_wrapper()
         if train:
@@ -137,11 +140,11 @@ class Runner(object):
             output_dict, batch_loss = self.wrapper(data)  # TODO
             batch_loss.backward()
             self.optimizer.step()
-            
+
             self.train_info.update(batch_loss, output_dict)
             self.batch_time.update(time.time() - time_stamp)
             time_stamp = time.time()
-            
+
             self.logger.log_batch(batch_idx)
 
     def _test_epoch(self):
@@ -164,7 +167,7 @@ class Runner(object):
                     data = data.to(self.device)
 
                 output_dict, batch_loss = self.wrapper(data)
-                                
+
                 self.test_info.update(batch_loss, output_dict)
                 self.batch_time.update(time.time() - time_stamp)
                 time_stamp = time.time()
