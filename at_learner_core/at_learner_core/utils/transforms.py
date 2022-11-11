@@ -623,11 +623,11 @@ class RankPooling(object):
         return svr_model.coef_
 
     def __call__(self, images):
-        # np_images = np.array([np.array(x) for x in images])
-        # input_arr = np_images.reshape((np_images.shape[0], -1)).T
-        # result_img = self._rank_pooling(input_arr).reshape(np_images.shape[1:])
-        # result_img = (result_img - result_img.min()) / (result_img.max() - result_img.min())
-        # return Image.fromarray((result_img * 255).astype(np.uint8))
+        np_images = np.array([np.array(x) for x in images])
+        input_arr = np_images.reshape((np_images.shape[0], -1)).T
+        result_img = self._rank_pooling(input_arr).reshape(np_images.shape[1:])
+        result_img = (result_img - result_img.min()) / (result_img.max() - result_img.min())
+        return Image.fromarray((result_img * 255).astype(np.uint8))
         return images
 
     def __repr__(self):
