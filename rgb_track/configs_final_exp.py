@@ -60,46 +60,46 @@ postprocess_transform = tv.transforms.Compose([
 ])
 
 train_image_transform = tv.transforms.Compose([
-    # transforms.Transform4EachKey([
-    #     preprocess_transform,
-    #     tv.transforms.RandomApply([j_transforms.ColorJitter(0.2, 0.2, 0.2, 0.2)], p=0.5),
-    # ], key_list=['data']),
+    transforms.Transform4EachKey([
+        preprocess_transform,
+        tv.transforms.RandomApply([j_transforms.ColorJitter(0.2, 0.2, 0.2, 0.2)], p=0.5),
+    ], key_list=['data']),
 
-    # transforms.Transform4EachKey([
-    #     tv.transforms.RandomApply([
-    #         transforms.Transform4EachElement([
-    #             tv.transforms.RandomApply([
-    #                 tv.transforms.RandomRotation(5)
-    #             ], p=0.5)
-    #         ])], p=0.5),
-    #     tv.transforms.RandomApply([
-    #         transforms.Transform4EachElement([
-    #             tv.transforms.RandomApply([
-    #                 tv.transforms.RandomCrop(image_size, padding=5, pad_if_needed=True)
-    #             ], p=0.5)
-    #         ])
-    #     ], p=0.5),
-    #     tv.transforms.RandomApply([
-    #         transforms.Transform4EachElement([
-    #             tv.transforms.RandomApply([
-    #                 tv.transforms.ColorJitter(0.05, 0.05, 0.05, 0.00)
-    #             ], p=0.5)
-    #         ])
-    #     ], p=0.5),
-    # ], key_list=['data']),
-    # transforms.CreateNewItem(transforms.LiuOpticalFlowTransform((0, 4), (L - 4, L)), 'data', 'optical_flow'),
-    # transforms.CreateNewItem(transforms.LiuOpticalFlowTransform((0, 1), (2, 4)), 'data', 'optical_flow_start'),
-    # postprocess_transform
+    transforms.Transform4EachKey([
+        tv.transforms.RandomApply([
+            transforms.Transform4EachElement([
+                tv.transforms.RandomApply([
+                    tv.transforms.RandomRotation(5)
+                ], p=0.5)
+            ])], p=0.5),
+        tv.transforms.RandomApply([
+            transforms.Transform4EachElement([
+                tv.transforms.RandomApply([
+                    tv.transforms.RandomCrop(image_size, padding=5, pad_if_needed=True)
+                ], p=0.5)
+            ])
+        ], p=0.5),
+        tv.transforms.RandomApply([
+            transforms.Transform4EachElement([
+                tv.transforms.RandomApply([
+                    tv.transforms.ColorJitter(0.05, 0.05, 0.05, 0.00)
+                ], p=0.5)
+            ])
+        ], p=0.5),
+    ], key_list=['data']),
+    transforms.CreateNewItem(transforms.LiuOpticalFlowTransform((0, 4), (L - 4, L)), 'data', 'optical_flow'),
+    transforms.CreateNewItem(transforms.LiuOpticalFlowTransform((0, 1), (2, 4)), 'data', 'optical_flow_start'),
+    postprocess_transform
 
 ])
 
 test_image_transform = tv.transforms.Compose([
-    # transforms.Transform4EachKey([
-    #     preprocess_transform,
-    # ], key_list=['data']),
-    # transforms.CreateNewItem(transforms.LiuOpticalFlowTransform(0, L - 1), 'data', 'optical_flow'),
-    # transforms.CreateNewItem(transforms.LiuOpticalFlowTransform(0, 1), 'data', 'optical_flow_start'),
-    # postprocess_transform
+    transforms.Transform4EachKey([
+        preprocess_transform,
+    ], key_list=['data']),
+    transforms.CreateNewItem(transforms.LiuOpticalFlowTransform(0, L - 1), 'data', 'optical_flow'),
+    transforms.CreateNewItem(transforms.LiuOpticalFlowTransform(0, 1), 'data', 'optical_flow_start'),
+    postprocess_transform
 ])
 
 
