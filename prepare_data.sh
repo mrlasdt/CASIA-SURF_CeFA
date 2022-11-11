@@ -34,7 +34,7 @@ mkdir data_zalo
   -H 'user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36' \
   --compressed --output data_zalo/train.zip
 
-  unzip data_zalo/train.zip -d data_zalo
+  unzip -nq data_zalo/train.zip -d data_zalo
 
   # unzip data_zalo/public.zip -d data_zalo
 

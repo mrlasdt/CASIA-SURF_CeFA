@@ -11,6 +11,7 @@ from .pyflow import pyflow
 
 from torchvision.transforms import functional as F
 
+
 class CreateNewItem(object):
     def __init__(self, transforms, key, new_key):
         self.transforms = transforms
@@ -30,13 +31,14 @@ class CreateNewItem(object):
         format_string += ')'
         return format_string
 
+
 class RandomZoom(object):
     def __init__(self, size):
         self.size_min = size[0]
         self.size_max = size[1]
-                       
+
     def __call__(self, imgs):
-        p_size = np.random.randint(self.size_min, self.size_max+1)
+        p_size = np.random.randint(self.size_min, self.size_max + 1)
         size = (int(p_size), int(p_size))
         out = list(F.center_crop(img, size) for img in imgs)
         if len(out) == 1:
@@ -45,17 +47,17 @@ class RandomZoom(object):
             return out
 
     def __repr__(self):
-        return self.__class__.__name__ + '(size={}-{})'.format(self.size_min,self.size_max)
+        return self.__class__.__name__ + '(size={}-{})'.format(self.size_min, self.size_max)
 
 
 class LiuOpticalFlowTransform(object):
     def __init__(self, first_index, second_index):
         self.first_index = first_index
         self.second_index = second_index
-        
+
     def __call__(self, images):
         if type(self.first_index) == tuple:
-            first_index = np.random.randint(self.first_index[0], self.first_index[1]+1)
+            first_index = np.random.randint(self.first_index[0], self.first_index[1] + 1)
         else:
             first_index = self.first_index
 
@@ -63,8 +65,7 @@ class LiuOpticalFlowTransform(object):
             second_index = np.random.randint(self.second_index[0], self.second_index[1])
         else:
             second_index = self.second_index
-        
-        
+
         im1 = images[first_index]
         im2 = images[second_index]
         im1 = np.array(im1).astype(float) / 255.
@@ -73,7 +74,7 @@ class LiuOpticalFlowTransform(object):
                                              nOuterFPIterations=7, nInnerFPIterations=1,
                                              nSORIterations=30, colType=0)
         return [u.astype(np.float32), v.astype(np.float32)]
-    
+
 
 class SaveOnlyMaxDiff(object):
     def __init__(self, first_index_range, second_index_range):
@@ -100,7 +101,7 @@ class SaveOnlyMaxDiff(object):
         format_string += str(self.second_index_range) + ', '
         format_string += ')'
         return format_string
-    
+
 
 class OpticalFlowTransform(object):
     def __init__(self, first_index, second_index, flow_type='all', return_type='PIL',
@@ -121,7 +122,7 @@ class OpticalFlowTransform(object):
 
     def __call__(self, images):
         if type(self.first_index) == tuple:
-            first_index = np.random.randint(self.first_index[0], self.first_index[1]+1)
+            first_index = np.random.randint(self.first_index[0], self.first_index[1] + 1)
         else:
             first_index = self.first_index
 
@@ -208,12 +209,12 @@ class Transform4EachLabel(object):
     """
     Applies transforms only to chosen labels
     """
-    
+
     def __init__(self, transforms, label='target', allowed_labels=[0, 1]):
         self.label = label
         self.allowed_labels = allowed_labels if type(allowed_labels) == list else [allowed_labels]
         self.transforms = transforms
-        
+
     def __call__(self, input_dict):
         dict_label = input_dict[self.label]
         if dict_label in set(self.allowed_labels):
@@ -229,7 +230,7 @@ class Transform4EachLabel(object):
         format_string += str(self.label)
         format_string += '\n)'
         return format_string
-    
+
 
 class Transform4EachKey(object):
     """
@@ -260,6 +261,7 @@ class Transform4EachElement(object):
     """
     Apply all transforms to list for each element
     """
+
     def __init__(self, transforms):
         self.transforms = transforms
 
@@ -281,28 +283,28 @@ class JointTransform(object):
     """
     Apply all transforms with equal random parameters to each element
     """
+
     def __init__(self, transforms):
         self.transforms = transforms
-    
-    
+
     def __call__(self, input):
         for t in self.tranforms:
             input = t(input)
         return input
-    
-    
+
     def __repr__(self):
         format_string = self.__class__.__name__ + '('
         format_string += '\n'
         format_string += self.transforms.__repr__()
         format_string += '\n)'
         return format_string
-    
+
 
 class StackTensors(object):
     """
     Stack list of tensors to one tensor
     """
+
     def __init__(self, squeeze=False):
         self.squeeze = squeeze
 
@@ -367,6 +369,7 @@ class GaussianNoise(object):
     """
     Apply Gaussian noise to image with probability 0.5
     """
+
     def __init__(self, var_limit=(10.0, 50.0), mean=0., rand_prob=0.5):
         self.var_limit = var_limit
         self.mean = mean
@@ -423,6 +426,7 @@ class RandomBlur(object):
     """
     Apply random blur
     """
+
     def __init__(self, p=0.5):
         self.p = p
 
@@ -431,44 +435,43 @@ class RandomBlur(object):
 
     def __repr__(self):
         return self.__class__.__name__
-    
-    
-    
+
+
 class SquarePad(object):
-    
+
     def __call__(self, im):
-        if type(im)==list:
+        if type(im) == list:
             return [self.__call__(ims) for ims in im]
-        w,h = im.size
-        max_size = max(w,h)
+        w, h = im.size
+        max_size = max(w, h)
 
         delta_w = max_size - w
         delta_h = max_size - h
 
-        padding = (delta_w//2, delta_h//2, delta_w-(delta_w//2), delta_h-(delta_h//2))
+        padding = (delta_w // 2, delta_h // 2, delta_w - (delta_w // 2), delta_h - (delta_h // 2))
         new_im = ImageOps.expand(im, padding)
         return new_im
-    
+
     def __repr__(self):
         return self.__class__.__name__
-    
-    
+
+
 class RemoveBlackBorders(object):
-    
+
     def __call__(self, im):
-        if type(im)==list:
+        if type(im) == list:
             return [self.__call__(ims) for ims in im]
         V = np.array(im)
-        V = np.mean(V,axis=2)
-        X=np.sum(V,axis=0)
-        Y=np.sum(V,axis=1)
-        y1=np.nonzero(Y)[0][0]
-        y2=np.nonzero(Y)[0][-1]
+        V = np.mean(V, axis=2)
+        X = np.sum(V, axis=0)
+        Y = np.sum(V, axis=1)
+        y1 = np.nonzero(Y)[0][0]
+        y2 = np.nonzero(Y)[0][-1]
 
-        x1=np.nonzero(X)[0][0]
-        x2=np.nonzero(X)[0][-1]
-        return im.crop([x1,y1,x2,y2])
-    
+        x1 = np.nonzero(X)[0][0]
+        x2 = np.nonzero(X)[0][-1]
+        return im.crop([x1, y1, x2, y2])
+
     def __repr__(self):
         return self.__class__.__name__
 
@@ -489,9 +492,6 @@ class MeanSubtraction(object):
         return self.__class__.__name__
 
 
-    
-    
-    
 class MeanXSubtraction(object):
     def __init__(self, x):
         self.x = x
@@ -519,16 +519,17 @@ class MeanXSubtraction(object):
     def __repr__(self):
         return self.__class__.__name__
 
-    
+
 class SelectOneImg(object):
     def __init__(self, n):
         self.number = n
+
     def __call__(self, images):
         return images[self.number]
-    
+
     def __repr__(self):
-        return self.__class__.__name__    
-    
+        return self.__class__.__name__
+
 
 class MergeTransform(object):
     def __init__(self, key_list, save_key):
@@ -623,10 +624,11 @@ class RankPooling(object):
 
     def __call__(self, images):
         np_images = np.array([np.array(x) for x in images])
-        input_arr = np_images.reshape((np_images.shape[0], -1)).T
-        result_img = self._rank_pooling(input_arr).reshape(np_images.shape[1:])
-        result_img = (result_img - result_img.min()) / (result_img.max() - result_img.min())
-        return Image.fromarray((result_img * 255).astype(np.uint8))
+        # input_arr = np_images.reshape((np_images.shape[0], -1)).T
+        # result_img = self._rank_pooling(input_arr).reshape(np_images.shape[1:])
+        # result_img = (result_img - result_img.min()) / (result_img.max() - result_img.min())
+        # return Image.fromarray((result_img * 255).astype(np.uint8))
+        return np_images
 
     def __repr__(self):
         format_string = self.__class__.__name__
