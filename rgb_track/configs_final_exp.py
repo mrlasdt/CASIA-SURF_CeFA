@@ -32,14 +32,16 @@ train_seq_transform = tv.transforms.Compose([
 ])
 
 preprocess_transform = transforms.Transform4EachElement([
-    transforms.RemoveBlackBorders(),
+    # transforms.RemoveBlackBorders(),
     transforms.SquarePad(),
     tv.transforms.Resize(image_size),
 ])
 
 postprocess_transform = tv.transforms.Compose([
-    transforms.CreateNewItem(transforms.RankPooling(C=1000), 'data', 'stat_r1000'),
-    transforms.CreateNewItem(transforms.RankPooling(C=1), 'data', 'stat_r1'),
+    # transforms.CreateNewItem(transforms.RankPooling(C=1000), 'data', 'stat_r1000'),
+    # transforms.CreateNewItem(transforms.RankPooling(C=1), 'data', 'stat_r1'),
+    transforms.CreateNewItem(tv.transforms.Lambda(lambda x: x, 'data', 'stat_r1000')),
+    transforms.CreateNewItem(tv.transforms.Lambda(lambda x: x, 'data', 'stat_r1')),
 
     transforms.DeleteKeys(['data']),
 
