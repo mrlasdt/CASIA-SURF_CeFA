@@ -11,8 +11,8 @@ from at_learner_core.utils import sequence_transforms as s_transforms
 from PIL import Image
 
 L = 16
-train_path = '../externals/train_zalo.csv'
-test_path = '../externals/test_zalo.csv'
+train_path = 'externals/train_zalo.csv'
+test_path = 'externals/test_zalo.csv'
 save_dir_in_colab = '/content/drive/MyDrive/ZALO_AI_2022'
 
 image_size = 112

@@ -6,7 +6,7 @@ from models.wrappers.sdnet_wrapper import SDNetWrapper
 from models.wrappers.dlas_wrapper import DLASWrapper
 
 from at_learner_core.datasets.dataset_manager import DatasetManager
-import shutil
+from distutils.dir_util import copy_tree
 from pathlib import Path
 
 
@@ -58,4 +58,4 @@ class RGBRunner(Runner):
         save_dir_in_colab = Path(self.config.checkpoint_config.save_dir_in_colab).resolve()
         save_dir_in_local = Path(self.config.checkpoint_config.out_path).resolve()
         if save_dir_in_colab.exists() and save_dir_in_local.exists():
-            shutil.copy(str(save_dir_in_local), str(save_dir_in_colab))
+            copy_tree(str(save_dir_in_local), str(save_dir_in_colab))
