@@ -1,5 +1,7 @@
 #!/bin/bash
 
+git clone https://github.com/mrlasdt/CASIA-SURF_CeFA.git
+
 #Install at_learner_core
 
 pip install -e at_learner_core
