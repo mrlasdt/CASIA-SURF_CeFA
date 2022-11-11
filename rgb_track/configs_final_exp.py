@@ -40,8 +40,8 @@ preprocess_transform = transforms.Transform4EachElement([
 postprocess_transform = tv.transforms.Compose([
     # transforms.CreateNewItem(transforms.RankPooling(C=1000), 'data', 'stat_r1000'),
     # transforms.CreateNewItem(transforms.RankPooling(C=1), 'data', 'stat_r1'),
-    transforms.CreateNewItem(tv.transforms.Lambda(lambda x: x, 'data', 'stat_r1000')),
-    transforms.CreateNewItem(tv.transforms.Lambda(lambda x: x, 'data', 'stat_r1')),
+    transforms.CreateNewItem(tv.transforms.Lambda(lambda x: x), 'data', 'stat_r1000'),
+    transforms.CreateNewItem(tv.transforms.Lambda(lambda x: x), 'data', 'stat_r1'),
 
     transforms.DeleteKeys(['data']),
 
