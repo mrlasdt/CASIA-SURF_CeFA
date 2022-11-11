@@ -69,7 +69,7 @@ class VideoDataset(torch.utils.data.Dataset):
     def _read_list(self):
         data_df = pd.read_csv(self.datalist_config.datalist_path)
         # data_df = data_df[data_df[self.datalist_config.protocol_name]] #skip protocol
-
+        
         if isinstance(self.datalist_config.data_columns, list):
             self.data_columns = self.datalist_config.data_columns
         elif isinstance(self.datalist_config.data_columns, tuple):
