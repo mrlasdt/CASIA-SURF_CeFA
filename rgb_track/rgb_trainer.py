@@ -6,6 +6,8 @@ from models.wrappers.sdnet_wrapper import SDNetWrapper
 from models.wrappers.dlas_wrapper import DLASWrapper
 
 from at_learner_core.datasets.dataset_manager import DatasetManager
+import shutil
+from pathlib import Path
 
 
 class RGBRunner(Runner):
@@ -46,3 +48,14 @@ class RGBRunner(Runner):
         self.val_loader = DatasetManager.get_dataloader(self.config.datalist_config.testlist_configs,
                                                         self.config.train_process_config,
                                                         shuffle=False)
+
+    def _process_on_epoch_start(self):
+        """
+        This method was created for preprocessing before the beginning of epoch.
+        For example, change dataset indices.
+        :return:
+        """
+        save_dir_in_colab = Path(self.config.checkpoint_config.save_dir_in_colab).resolve()
+        save_dir_in_local = Path(self.config.checkpoint_config.out_path).resolve()
+        if save_dir_in_colab.exists() and save_dir_in_local.exists():
+            shutil.copy(str(save_dir_in_local), str(save_dir_in_colab))

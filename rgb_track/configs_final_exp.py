@@ -10,9 +10,10 @@ from at_learner_core.utils import joint_transforms as j_transforms
 from at_learner_core.utils import sequence_transforms as s_transforms
 from PIL import Image
 
-L = 5
-train_path = '/home/sds/hungbnt/test/CASIA-SURF_CeFA/externals/notebooks/train_zalo.csv'
-test_path = '/home/sds/hungbnt/test/CASIA-SURF_CeFA/externals/notebooks/train_zalo.csv'
+L = 16
+train_path = '../externals/train_zalo.csv'
+test_path = '../externals/test_zalo.csv'
+save_dir_in_colab = '/content/drive/MyDrive/ZALO_AI_2022'
 
 image_size = 112
 modality_list = ['stat_r1000', 'stat_r1']
@@ -112,6 +113,7 @@ def get_config(protocol_name):
         'checkpoint_config': {
             'out_path': None,
             'save_frequency': 1,
+            'save_dir_in_colab': save_dir_in_colab,
         },
 
         'datalist_config': {
