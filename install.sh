@@ -12,11 +12,7 @@ cp ../../../../data/OpticalFlow.cpp src/OpticalFlow.cpp #Remove logs spamming to
 pip install cython
 python setup.py build_ext -i
 python demo.py # 
-
-#Train, dev lists creating. Replace root path to images in train_list.txt, dev_list.txt, dev_test_list.txt
-
 cd ../../../../
-python externals/prepare_lists.py
 
-#
-cd ../rgb_track
+
+

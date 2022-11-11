@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES=0 python rgb_track/main.py --config experiments/rgb_track/exp1_protocol_4_1/rgb_track_exp1_protocol_4_1.config;
