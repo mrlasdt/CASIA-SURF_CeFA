@@ -11,6 +11,7 @@ from at_learner_core.utils import sequence_transforms as s_transforms
 from PIL import Image
 
 L = 16
+batch_size = 128
 train_path = 'externals/train_zalo.csv'
 test_path = 'externals/test_zalo.csv'
 save_dir_in_colab = '/content/drive/MyDrive/ZALO_AI_2022'
@@ -148,7 +149,7 @@ def get_config(protocol_name):
         'train_process_config': {
             'nthreads': nthreads,
             'ngpu': 1,
-            'batchsize': 32,
+            'batchsize': batch_size,
             'nepochs': 5,
             'resume': None,
             'optimizer_config': {
