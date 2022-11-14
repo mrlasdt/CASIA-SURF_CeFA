@@ -1,3 +1,4 @@
+import time
 import random
 import collections
 from PIL import Image, ImageFilter, ImageOps
@@ -10,6 +11,7 @@ from sklearn import svm
 from .pyflow import pyflow
 
 from torchvision.transforms import functional as F
+import cuml
 
 
 class CreateNewItem(object):
@@ -92,8 +94,7 @@ class SaveOnlyMaxDiff(object):
                     max_first_index = first_index
                     max_second_index = second_index
                     max_diff = diff
-
-        return [images[max_first_index], images[max_second_index]]
+        return [np.array(images[max_first_index]).astype(np.float32).mean(axis=2), np.array(images[max_second_index]).astype(np.float32).mean(axis=2)]
 
     def __repr__(self):
         format_string = self.__class__.__name__ + '('
@@ -605,20 +606,21 @@ class RankPooling(object):
         :param NLStyle: Nonlinear transformation.Including: 'ref', 'tanh', 'ssr'.
         :return: Result of rank pooling
         '''
-
         seq_smooth = self._smoothSeq(time_seq)
         seq_nonlinear = self._getNonLinearity(seq_smooth, NLStyle)
         seq_norm = self._normalize(seq_nonlinear)
         seq_len = np.size(seq_norm, 1)
         Labels = np.array(range(1, seq_len + 1))
         seq_svr = scipy.sparse.csr_matrix(np.transpose(seq_norm))
-        svr_model = svm.LinearSVR(epsilon=0.1,
-                                  tol=0.001,
-                                  C=self.C,
-                                  loss='squared_epsilon_insensitive',
-                                  fit_intercept=False,
-                                  dual=False,
-                                  random_state=42)
+        # svr_model = svm.LinearSVR(epsilon=0.1,
+        #                           tol=0.001,
+        #                           C=self.C,
+        #                           loss='squared_epsilon_insensitive',
+        #                           fit_intercept=False,
+        #                           dual=False,
+        #                           random_state=42)
+        svr_model = cuml.svm.LinearSVR(epsilonfloat=0.1, tol=0.001, C=self.C,
+                                       loss='squared_epsilon_insensitive', fit_intercept=False, output_type='numpy')
         svr_model.fit(seq_svr, Labels)
         return svr_model.coef_
 
@@ -628,7 +630,6 @@ class RankPooling(object):
         result_img = self._rank_pooling(input_arr).reshape(np_images.shape[1:])
         result_img = (result_img - result_img.min()) / (result_img.max() - result_img.min())
         return Image.fromarray((result_img * 255).astype(np.uint8))
-        return images
 
     def __repr__(self):
         format_string = self.__class__.__name__

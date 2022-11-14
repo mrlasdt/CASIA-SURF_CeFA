@@ -10,13 +10,13 @@ from at_learner_core.utils import joint_transforms as j_transforms
 from at_learner_core.utils import sequence_transforms as s_transforms
 from PIL import Image
 
-L = 16
-batch_size = 32
+L = 8
+batch_size = 8
 train_path = 'externals/train_zalo.csv'
 test_path = 'externals/test_zalo.csv'
 save_dir_in_colab = '/content/drive/MyDrive/ZALO_AI_2022'
-outpath = 'experiment'
-nthreads = 2
+outpath = 'experiments'
+nthreads = 8
 image_size = 112
 modality_list = ['stat_r1000', 'stat_r1']
 of_modality_list = ['optical_flow', 'optical_flow_start']
@@ -39,11 +39,12 @@ preprocess_transform = transforms.Transform4EachElement([
 ])
 
 postprocess_transform = tv.transforms.Compose([
-    # transforms.CreateNewItem(transforms.RankPooling(C=1000), 'data', 'stat_r1000'),
-    # transforms.CreateNewItem(transforms.RankPooling(C=1), 'data', 'stat_r1'),
-    transforms.CreateNewItem(tv.transforms.Lambda(lambda x: x), 'data', 'stat_r1000'),
-    transforms.CreateNewItem(tv.transforms.Lambda(lambda x: x), 'data', 'stat_r1'),
-
+    transforms.CreateNewItem(transforms.RankPooling(C=1000), 'data', 'stat_r1000'),
+    transforms.CreateNewItem(transforms.RankPooling(C=1), 'data', 'stat_r1'),
+    # transforms.CreateNewItem(tv.transforms.Lambda(lambda x: x), 'data', 'stat_r1000'),
+    # transforms.CreateNewItem(tv.transforms.Lambda(lambda x: x), 'data', 'stat_r1'),
+    # transforms.CreateNewItem(transforms.MeanXSubtraction('mean'), 'data', 'stat_r1000'),
+    # transforms.CreateNewItem(transforms.MeanXSubtraction('mean'), 'data', 'stat_r1'),
     transforms.DeleteKeys(['data']),
 
     transforms.Transform4EachKey([
@@ -92,6 +93,8 @@ train_image_transform = tv.transforms.Compose([
     ], key_list=['data']),
     transforms.CreateNewItem(transforms.LiuOpticalFlowTransform((0, 4), (L - 4, L)), 'data', 'optical_flow'),
     transforms.CreateNewItem(transforms.LiuOpticalFlowTransform((0, 1), (2, 4)), 'data', 'optical_flow_start'),
+    # transforms.CreateNewItem(transforms.SaveOnlyMaxDiff((0, 4), (L - 5, L - 1)), 'data', 'optical_flow'),
+    # transforms.CreateNewItem(transforms.SaveOnlyMaxDiff((0, 1), (2, 4)), 'data', 'optical_flow_start'),
     postprocess_transform
 
 ])
@@ -102,6 +105,8 @@ test_image_transform = tv.transforms.Compose([
     ], key_list=['data']),
     transforms.CreateNewItem(transforms.LiuOpticalFlowTransform(0, L - 1), 'data', 'optical_flow'),
     transforms.CreateNewItem(transforms.LiuOpticalFlowTransform(0, 1), 'data', 'optical_flow_start'),
+    # transforms.CreateNewItem(transforms.SaveOnlyMaxDiff((0, 4), (L - 4, L)), 'data', 'optical_flow'),
+    # transforms.CreateNewItem(transforms.SaveOnlyMaxDiff((0, 1), (2, 4)), 'data', 'optical_flow_start'),
     postprocess_transform
 ])
 

@@ -10,7 +10,7 @@ from . import loggers
 class Runner(object):
     def __init__(self, config, train=True):
         self.config = config
-        device = "cuda:0" if config.train_process_config.ngpu else "cpu"
+        device = "cuda" if config.train_process_config.ngpu else "cpu"
         if "cuda" in device:
             assert torch.cuda.is_available(), "No GPU found"
         self.device = torch.device(device)
@@ -89,6 +89,7 @@ class Runner(object):
         * Add iteration by sessions
         * Add freeze parameters
         """
+        start = time.time()
         for epoch in range(self.epoch, self.config.train_process_config.nepochs):
             self.epoch = epoch
             self._process_on_epoch_start()
@@ -135,12 +136,12 @@ class Runner(object):
                             data[k] = v.to(self.device)
             else:
                 data = data.to(self.device)
-
+            print('load data', time.time() - time_stamp)
             self.optimizer.zero_grad()
             output_dict, batch_loss = self.wrapper(data)  # TODO
             batch_loss.backward()
             self.optimizer.step()
-
+            print('forward', time.time() - time_stamp)
             self.train_info.update(batch_loss, output_dict)
             self.batch_time.update(time.time() - time_stamp)
             time_stamp = time.time()

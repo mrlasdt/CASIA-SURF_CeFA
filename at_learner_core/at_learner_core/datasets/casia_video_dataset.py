@@ -36,16 +36,16 @@ class VideoDataset(torch.utils.data.Dataset):
 
     def __getitem__(self, index):
         item_dict = OrderedDict()
-        video_subdf = self.df[self.df.batch_idx == index]
+        self.video_subdf = self.df[self.df.batch_idx == index]
 
         for column, column_name in self.data_columns:
             all_images = []
-            for img_path in video_subdf[column].values:
+            for img_path in self.video_subdf[column].values:
                 all_images.append(img_path)
             item_dict[column_name] = all_images
 
         for column, column_name in self.target_columns:
-            item_dict[column_name] = video_subdf[column].iloc[0]
+            item_dict[column_name] = self.video_subdf[column].iloc[0]
 
         if self.seq_transforms is not None:
             item_dict = self.seq_transforms(item_dict)
@@ -59,7 +59,7 @@ class VideoDataset(torch.utils.data.Dataset):
         if self.transforms is not None:
             item_dict = self.transforms(item_dict)
 
-        item_dict['video_id'] = str(video_subdf[self.group_column].iloc[0])
+        item_dict['video_id'] = str(self.video_subdf[self.group_column].iloc[0])
 
         return item_dict
 
