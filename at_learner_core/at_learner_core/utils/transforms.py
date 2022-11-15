@@ -11,7 +11,7 @@ from sklearn import svm
 from .pyflow import pyflow
 
 from torchvision.transforms import functional as F
-import cuml
+# import cuml
 
 
 class CreateNewItem(object):
@@ -612,15 +612,15 @@ class RankPooling(object):
         seq_len = np.size(seq_norm, 1)
         Labels = np.array(range(1, seq_len + 1))
         seq_svr = scipy.sparse.csr_matrix(np.transpose(seq_norm))
-        # svr_model = svm.LinearSVR(epsilon=0.1,
-        #                           tol=0.001,
-        #                           C=self.C,
-        #                           loss='squared_epsilon_insensitive',
-        #                           fit_intercept=False,
-        #                           dual=False,
-        #                           random_state=42)
-        svr_model = cuml.svm.LinearSVR(epsilonfloat=0.1, tol=0.001, C=self.C,
-                                       loss='squared_epsilon_insensitive', fit_intercept=False, output_type='numpy')
+        svr_model = svm.LinearSVR(epsilon=0.1,
+                                  tol=0.001,
+                                  C=self.C,
+                                  loss='squared_epsilon_insensitive',
+                                  fit_intercept=False,
+                                  dual=False,
+                                  random_state=42)
+        # svr_model = cuml.svm.LinearSVR(epsilonfloat=0.1, tol=0.001, C=self.C,
+        #                                loss='squared_epsilon_insensitive', fit_intercept=False, output_type='numpy')
         svr_model.fit(seq_svr, Labels)
         return svr_model.coef_
 
